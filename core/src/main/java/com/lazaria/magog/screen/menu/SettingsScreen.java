@@ -6,8 +6,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -73,19 +75,21 @@ public class SettingsScreen extends ScreenAdapter {
         table.setFillParent(true);
         table.center();
 
-        // Stil personalizat pentru slider
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = (int)(100 * Gdx.graphics.getDensity());
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
-        sliderStyle.background = skin.newDrawable("default-slider", 0.4f, 0.4f, 0.4f, 1f);  // Slider mai vizibil
+        sliderStyle.background = skin.newDrawable("default-slider", 0.4f, 0.4f, 0.4f, 1f);
         sliderStyle.knob = skin.newDrawable("default-slider-knob", 1f, 1f, 1f, 1f);
-        sliderStyle.background.setMinHeight(20f);  // Grosimea slider-ului
-        sliderStyle.knob.setMinHeight(40f);        // Dimensiunea knob-ului
+        sliderStyle.background.setMinHeight(20f);
+        sliderStyle.knob.setMinHeight(40f);
 
-        // Stil personalizat pentru label (font mai mare)
         Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = skin.getFont("default-font");
-        labelStyle.font.getData().setScale(2f);  // Mărește fontul
+        labelStyle.font = font;
 
-        // Creăm label și slider pentru volum muzică
         Label musicLabel = new Label("Music Volume", labelStyle);
         Slider musicSlider = new Slider(0f, 1f, 0.1f, false, sliderStyle);
         musicSlider.setValue(menuMusic.getVolume());
@@ -97,7 +101,6 @@ public class SettingsScreen extends ScreenAdapter {
             }
         });
 
-        // Creăm label și slider pentru efectele sonore
         Label effectsLabel = new Label("Effects Volume", labelStyle);
         Slider effectsSlider = new Slider(0f, 1f, 0.1f, false, sliderStyle);
         effectsSlider.setValue(game.getSoundEffectsVolume());
@@ -110,7 +113,6 @@ public class SettingsScreen extends ScreenAdapter {
             }
         });
 
-        // Buton de returnare la meniul principal
         Texture returnButtonTexture = new Texture(Gdx.files.internal("return.png"));
         TextureRegionDrawable returnDrawable = new TextureRegionDrawable(new TextureRegion(returnButtonTexture));
         ImageButton returnButton = new ImageButton(returnDrawable);
@@ -120,7 +122,7 @@ public class SettingsScreen extends ScreenAdapter {
         returnContainer.setTransform(true);
         returnContainer.size(200f, 100f);
         returnContainer.setOrigin(returnContainer.getWidth() / 2, returnContainer.getHeight() / 2);
-        returnContainer.setPosition(viewport.getWorldWidth() - returnButton.getWidth() - 20, viewport.getWorldHeight() - returnButton.getHeight() - 20);  // Poziționează în dreapta sus
+        returnContainer.setPosition(viewport.getWorldWidth() - returnButton.getWidth() - 20, viewport.getWorldHeight() - returnButton.getHeight() - 20);
 
         ClickListener buttonClickListener = new ClickListener() {
             @Override
@@ -136,12 +138,10 @@ public class SettingsScreen extends ScreenAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Butonul Settings a fost apăsat!");
                 returnContainer.addAction(Actions.sequence(
                     Actions.scaleTo(1.1f, 1.1f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
                 ));
-                System.out.println("Returning to Main Menu");
                 game.setSoundEffectsVolume(soundEffectsVolume);
                 buttonClickListener.clicked(event, x, y);
                 transitionToMainMenuScreenScreen();
