@@ -64,7 +64,7 @@ public class GameScreen extends ScreenAdapter {
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("battle.mp3"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(game.getSoundEffectsVolume());
+        gameMusic.setVolume(game.getMusicVolume());
         gameMusic.play();
 
         this.game = game;

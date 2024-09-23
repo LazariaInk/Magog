@@ -98,8 +98,10 @@ public class SettingsScreen extends ScreenAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 menuMusic.setVolume(musicSlider.getValue());
+                game.setMusicVolume(musicSlider.getValue());
             }
         });
+
 
         Label effectsLabel = new Label("Effects Volume", labelStyle);
         Slider effectsSlider = new Slider(0f, 1f, 0.1f, false, sliderStyle);

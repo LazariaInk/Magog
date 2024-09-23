@@ -41,6 +41,7 @@ public class MainMenuScreen extends ScreenAdapter {
     public MainMenuScreen(StartGame game, Music menuMusic, Sound buttonSound) {
         this.game = game;
         this.menuMusic = menuMusic;
+        menuMusic.setVolume(game.getMusicVolume());
         this.buttonSound = buttonSound;
         batch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
