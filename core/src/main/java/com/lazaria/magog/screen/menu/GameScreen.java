@@ -54,8 +54,19 @@ public class GameScreen extends ScreenAdapter {
 
     private Sound runSound;
     private long runSoundId = -1;
+    private Music gameMusic;
+
 
     public GameScreen(StartGame game, Music menuMusic, Sound buttonSound) {
+        this.game = game;
+        this.menuMusic = menuMusic;
+        this.buttonSound = buttonSound;
+
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("battle.mp3"));
+        gameMusic.setLooping(true);
+        gameMusic.setVolume(game.getSoundEffectsVolume());
+        gameMusic.play();
+
         this.game = game;
         this.menuMusic = menuMusic;
         this.buttonSound = buttonSound;
@@ -125,6 +136,12 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void transitionToMainMenuScreenScreen() {
+        gameMusic.stop();
+
+        menuMusic.setLooping(true);
+        menuMusic.setVolume(game.getSoundEffectsVolume());
+        menuMusic.play();
+
         fadeActor.addAction(Actions.sequence(
             Actions.alpha(0f),
             Actions.fadeIn(0.5f),
@@ -205,5 +222,6 @@ public class GameScreen extends ScreenAdapter {
         knightTexture.dispose();
         idleTexture.dispose();
         stage.dispose();
+        gameMusic.dispose();
     }
 }

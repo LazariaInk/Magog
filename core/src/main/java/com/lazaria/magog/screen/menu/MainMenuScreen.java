@@ -47,6 +47,12 @@ public class MainMenuScreen extends ScreenAdapter {
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
         leafTexture = new Texture(Gdx.files.internal("leaf.png"));
 
+        if (!menuMusic.isPlaying()) {
+            menuMusic.setLooping(true);
+            menuMusic.setVolume(game.getSoundEffectsVolume());
+            menuMusic.play();
+        }
+
         stage = new Stage(viewport);
 
         Gdx.input.setInputProcessor(stage);
@@ -182,6 +188,7 @@ public class MainMenuScreen extends ScreenAdapter {
     }
 
     private void transitionToPlayScreen() {
+        menuMusic.stop();
 
         fadeActor.addAction(Actions.sequence(
             Actions.alpha(0f),
