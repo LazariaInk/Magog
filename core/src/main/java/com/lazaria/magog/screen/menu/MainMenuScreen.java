@@ -2,7 +2,6 @@ package com.lazaria.magog.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.lazaria.magog.StartGame;
+import com.lazaria.magog.audio.SoundManager;
 
 import java.util.ArrayList;
 
@@ -32,64 +32,45 @@ public class MainMenuScreen extends ScreenAdapter {
     private Container<ImageButton> settingsContainer;
     private Container<ImageButton> profileContainer;
     private ArrayList<FallingLeaf> fallingLeaves;
-    private Music menuMusic;
-    private Sound buttonSound;
-
     private Actor fadeActor;
+    private SoundManager soundManager;
 
-
-    public MainMenuScreen(StartGame game, Music menuMusic, Sound buttonSound) {
+    public MainMenuScreen(StartGame game) {
         this.game = game;
-        this.menuMusic = menuMusic;
-        menuMusic.setVolume(game.getMusicVolume());
-        this.buttonSound = buttonSound;
+        soundManager = game.getSoundManager();
         batch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
         leafTexture = new Texture(Gdx.files.internal("leaf.png"));
-
-        if (!menuMusic.isPlaying()) {
-            menuMusic.setLooping(true);
-            menuMusic.setVolume(game.getSoundEffectsVolume());
-            menuMusic.play();
-        }
-
+        soundManager.playMenuMusic();
         stage = new Stage(viewport);
-
         Gdx.input.setInputProcessor(stage);
         fadeActor = new Actor();
         fadeActor.setColor(1f, 1f, 1f, 0f);
         fadeActor.setSize(1920, 1080);
-
         stage.addActor(fadeActor);
-
         Texture playButtonTexture = new Texture(Gdx.files.internal("Start.png"));
         TextureRegionDrawable playDrawable = new TextureRegionDrawable(new TextureRegion(playButtonTexture));
         ImageButton playButton = new ImageButton(playDrawable);
         playButton.setSize(400f, 200f);
-
         playContainer = new Container<>(playButton);
         playContainer.setTransform(true);
         playContainer.size(400f, 200f);
         playContainer.setOrigin(playContainer.getWidth() / 2, playContainer.getHeight() / 2);
         playContainer.setPosition(viewport.getWorldWidth() - playButton.getWidth(), 200);
-
         Texture settingsButtonTexture = new Texture(Gdx.files.internal("settings.png"));
         TextureRegionDrawable settingsDrawable = new TextureRegionDrawable(new TextureRegion(settingsButtonTexture));
         ImageButton settingsButton = new ImageButton(settingsDrawable);
         settingsButton.setSize(200f, 100f);
-
         settingsContainer = new Container<>(settingsButton);
         settingsContainer.setTransform(true);
         settingsContainer.size(200f, 100f);
         settingsContainer.setOrigin(settingsContainer.getWidth() / 2, settingsContainer.getHeight() / 2);
         settingsContainer.setPosition(viewport.getWorldWidth() - settingsButton.getWidth() - 20, viewport.getWorldHeight() - settingsButton.getHeight() - 20);
-
         Texture profileButtonTexture = new Texture(Gdx.files.internal("profile.png"));
         TextureRegionDrawable profileDrawable = new TextureRegionDrawable(new TextureRegion(profileButtonTexture));
         ImageButton profileButton = new ImageButton(profileDrawable);
         profileButton.setSize(400f, 200f);
-
         profileContainer = new Container<>(profileButton);
         profileContainer.setTransform(true);
         profileContainer.size(400f, 200f);
@@ -99,9 +80,7 @@ public class MainMenuScreen extends ScreenAdapter {
         ClickListener buttonClickListener = new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-                buttonSound.play(game.getSoundEffectsVolume());
-
+                soundManager.playSoundEffect();
                 stage.addAction(Actions.sequence(
                     Actions.delay(1f)
                 ));
@@ -111,7 +90,6 @@ public class MainMenuScreen extends ScreenAdapter {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Butonul Play a fost apăsat!");
                 playContainer.addAction(Actions.sequence(
                     Actions.scaleTo(1.2f, 1.2f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
@@ -124,7 +102,6 @@ public class MainMenuScreen extends ScreenAdapter {
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Butonul Settings a fost apăsat!");
                 settingsContainer.addAction(Actions.sequence(
                     Actions.scaleTo(1.1f, 1.1f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
@@ -137,7 +114,6 @@ public class MainMenuScreen extends ScreenAdapter {
         profileButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Butonul Profile a fost apăsat!");
                 profileContainer.addAction(Actions.sequence(
                     Actions.scaleTo(1.1f, 1.1f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
@@ -145,11 +121,9 @@ public class MainMenuScreen extends ScreenAdapter {
                 buttonClickListener.clicked(event, x, y);
             }
         });
-
         stage.addActor(playContainer);
         stage.addActor(settingsContainer);
         stage.addActor(profileContainer);
-
         fallingLeaves = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             FallingLeaf leaf = new FallingLeaf(leafTexture, viewport.getWorldWidth());
@@ -160,44 +134,31 @@ public class MainMenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         viewport.apply();
-
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         batch.end();
-
         stage.act(delta);
         stage.draw();
     }
 
     private void transitionToSettingsScreen() {
-
         fadeActor.addAction(Actions.sequence(
             Actions.alpha(0f),
             Actions.fadeIn(0.5f),
-            Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    game.setScreen(new SettingsScreen(game, menuMusic, buttonSound));
-                }
-            })
+            Actions.run(() -> game.setScreen(new SettingsScreen(game)))
         ));
     }
 
     private void transitionToPlayScreen() {
-        menuMusic.stop();
-
         fadeActor.addAction(Actions.sequence(
             Actions.alpha(0f),
             Actions.fadeIn(0.5f),
-            Actions.run(() -> game.setScreen(new GameScreen(game, menuMusic, buttonSound)))
+            Actions.run(() -> game.setScreen(new GameScreen(game)))
         ));
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -210,7 +171,5 @@ public class MainMenuScreen extends ScreenAdapter {
         backgroundTexture.dispose();
         leafTexture.dispose();
         stage.dispose();
-        menuMusic.dispose();
-        buttonSound.dispose();
     }
 }

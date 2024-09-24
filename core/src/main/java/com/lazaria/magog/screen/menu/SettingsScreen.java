@@ -2,8 +2,6 @@ package com.lazaria.magog.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,31 +18,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.lazaria.magog.StartGame;
+import com.lazaria.magog.audio.SoundManager;
 
 import java.util.ArrayList;
 
 public class SettingsScreen extends ScreenAdapter {
     private Stage stage;
     private FitViewport viewport;
-    private Music menuMusic;
-    private Sound buttonSound;
     private Skin skin;
     private StartGame game;
-
     private SpriteBatch batch;
     private Texture backgroundTexture;
     private Texture leafTexture;
     private ArrayList<FallingLeaf> fallingLeaves;
-    private float soundEffectsVolume = 1.0f;
-
     private Container<ImageButton> returnContainer;
-
     private Actor fadeActor;
+    private SoundManager soundManager;
 
-    public SettingsScreen(StartGame game, Music menuMusic, Sound buttonSound) {
+    public SettingsScreen(StartGame game) {
         this.game = game;
-        this.menuMusic = menuMusic;
-        this.buttonSound = buttonSound;
+        soundManager = game.getSoundManager();
 
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
@@ -77,7 +70,7 @@ public class SettingsScreen extends ScreenAdapter {
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = (int)(100 * Gdx.graphics.getDensity());
+        parameter.size = (int) (100 * Gdx.graphics.getDensity());
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
@@ -92,29 +85,24 @@ public class SettingsScreen extends ScreenAdapter {
 
         Label musicLabel = new Label("Music Volume", labelStyle);
         Slider musicSlider = new Slider(0f, 1f, 0.1f, false, sliderStyle);
-        musicSlider.setValue(menuMusic.getVolume());
+        musicSlider.setValue(soundManager.getMusicVolume());
 
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                menuMusic.setVolume(musicSlider.getValue());
-                game.setMusicVolume(musicSlider.getValue());
+                soundManager.setMusicVolume(musicSlider.getValue());
             }
         });
-
-
         Label effectsLabel = new Label("Effects Volume", labelStyle);
         Slider effectsSlider = new Slider(0f, 1f, 0.1f, false, sliderStyle);
-        effectsSlider.setValue(game.getSoundEffectsVolume());
-
+        effectsSlider.setValue(soundManager.getSoundEffectsVolume());
         effectsSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                soundEffectsVolume = effectsSlider.getValue();
-                buttonSound.play(soundEffectsVolume);
+                soundManager.setSoundEffectsVolume(effectsSlider.getValue());
+                soundManager.playSoundEffect();  // Redă sunetul butonului pentru feedback vizual
             }
         });
-
         Texture returnButtonTexture = new Texture(Gdx.files.internal("return.png"));
         TextureRegionDrawable returnDrawable = new TextureRegionDrawable(new TextureRegion(returnButtonTexture));
         ImageButton returnButton = new ImageButton(returnDrawable);
@@ -125,18 +113,6 @@ public class SettingsScreen extends ScreenAdapter {
         returnContainer.size(200f, 100f);
         returnContainer.setOrigin(returnContainer.getWidth() / 2, returnContainer.getHeight() / 2);
         returnContainer.setPosition(viewport.getWorldWidth() - returnButton.getWidth() - 20, viewport.getWorldHeight() - returnButton.getHeight() - 20);
-
-        ClickListener buttonClickListener = new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                buttonSound.play(game.getSoundEffectsVolume());
-
-                stage.addAction(Actions.sequence(
-                    Actions.delay(1f)
-                ));
-            }
-        };
-
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -144,12 +120,10 @@ public class SettingsScreen extends ScreenAdapter {
                     Actions.scaleTo(1.1f, 1.1f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
                 ));
-                game.setSoundEffectsVolume(soundEffectsVolume);
-                buttonClickListener.clicked(event, x, y);
+                soundManager.playSoundEffect();
                 transitionToMainMenuScreenScreen();
             }
         });
-
         table.add(musicLabel).pad(20);
         table.row();
         table.add(musicSlider).width(600).pad(20);
@@ -167,12 +141,7 @@ public class SettingsScreen extends ScreenAdapter {
         fadeActor.addAction(Actions.sequence(
             Actions.alpha(0f),
             Actions.fadeIn(0.5f),
-            Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    game.setScreen(new MainMenuScreen(game, menuMusic, buttonSound));
-                }
-            })
+            Actions.run(() -> game.setScreen(new MainMenuScreen(game)))
         ));
     }
 
