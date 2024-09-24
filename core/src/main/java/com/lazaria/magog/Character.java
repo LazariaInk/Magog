@@ -114,6 +114,22 @@ public class Character {
         }
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return 64f * 4;  // Example character width (based on scaling factor used in render method)
+    }
+
+    public float getHeight() {
+        return 64f * 4;  // Example character height (based on scaling factor used in render method)
+    }
+
     public static class Builder {
         private Texture idleTexture;
         private Texture runTexture;
