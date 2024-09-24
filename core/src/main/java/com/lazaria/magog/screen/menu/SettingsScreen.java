@@ -6,19 +6,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.lazaria.magog.StartGame;
 import com.lazaria.magog.audio.SoundManager;
+import com.lazaria.magog.utils.ButtonFactory;
 
 import java.util.ArrayList;
 
@@ -26,7 +22,6 @@ public class SettingsScreen extends ScreenAdapter {
     private Stage stage;
     private FitViewport viewport;
     private Skin skin;
-    private StartGame game;
     private SpriteBatch batch;
     private Texture backgroundTexture;
     private Texture leafTexture;
@@ -34,10 +29,11 @@ public class SettingsScreen extends ScreenAdapter {
     private Container<ImageButton> returnContainer;
     private Actor fadeActor;
     private SoundManager soundManager;
+    private ButtonFactory buttonFactory;
 
     public SettingsScreen(StartGame game) {
-        this.game = game;
         soundManager = game.getSoundManager();
+        buttonFactory = new ButtonFactory();
 
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
@@ -100,30 +96,11 @@ public class SettingsScreen extends ScreenAdapter {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 soundManager.setSoundEffectsVolume(effectsSlider.getValue());
-                soundManager.playSoundEffect();  // Redă sunetul butonului pentru feedback vizual
-            }
-        });
-        Texture returnButtonTexture = new Texture(Gdx.files.internal("return.png"));
-        TextureRegionDrawable returnDrawable = new TextureRegionDrawable(new TextureRegion(returnButtonTexture));
-        ImageButton returnButton = new ImageButton(returnDrawable);
-        returnButton.setSize(200f, 100f);
-
-        returnContainer = new Container<>(returnButton);
-        returnContainer.setTransform(true);
-        returnContainer.size(200f, 100f);
-        returnContainer.setOrigin(returnContainer.getWidth() / 2, returnContainer.getHeight() / 2);
-        returnContainer.setPosition(viewport.getWorldWidth() - returnButton.getWidth() - 20, viewport.getWorldHeight() - returnButton.getHeight() - 20);
-        returnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                returnContainer.addAction(Actions.sequence(
-                    Actions.scaleTo(1.1f, 1.1f, 0.2f),
-                    Actions.scaleTo(1f, 1f, 0.2f)
-                ));
                 soundManager.playSoundEffect();
-                transitionToMainMenuScreenScreen();
             }
         });
+        returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+            - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         table.add(musicLabel).pad(20);
         table.row();
         table.add(musicSlider).width(600).pad(20);
@@ -132,17 +109,8 @@ public class SettingsScreen extends ScreenAdapter {
         table.row();
         table.add(effectsSlider).width(600).pad(20);
         table.row();
-
         stage.addActor(returnContainer);
         stage.addActor(table);
-    }
-
-    private void transitionToMainMenuScreenScreen() {
-        fadeActor.addAction(Actions.sequence(
-            Actions.alpha(0f),
-            Actions.fadeIn(0.5f),
-            Actions.run(() -> game.setScreen(new MainMenuScreen(game)))
-        ));
     }
 
     @Override

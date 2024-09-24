@@ -21,10 +21,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.lazaria.magog.StartGame;
 import com.lazaria.magog.audio.SoundManager;
+import com.lazaria.magog.utils.ButtonFactory;
 
 public class GameScreen extends ScreenAdapter {
     private Stage stage;
-    private FitViewport viewport;;
+    private FitViewport viewport;
+    ;
     private StartGame game;
     private SpriteBatch batch;
     private Texture backgroundTexture;
@@ -44,9 +46,11 @@ public class GameScreen extends ScreenAdapter {
     private Sound runSound;
     private long runSoundId = -1;
     private SoundManager soundManager;
+    private ButtonFactory buttonFactory;
 
     public GameScreen(StartGame game) {
         this.game = game;
+        buttonFactory = new ButtonFactory();
         soundManager = game.getSoundManager();
         soundManager.playGameMusic();
         viewport = new FitViewport(1920, 1080);
@@ -77,35 +81,12 @@ public class GameScreen extends ScreenAdapter {
         }
         knightAnimation = new Animation<>(0.1f, knightFrames, Animation.PlayMode.LOOP);
         runSound = Gdx.audio.newSound(Gdx.files.internal("run.wav"));
-        Texture returnButtonTexture = new Texture(Gdx.files.internal("return.png"));
-        TextureRegionDrawable returnDrawable = new TextureRegionDrawable(new TextureRegion(returnButtonTexture));
-        ImageButton returnButton = new ImageButton(returnDrawable);
-        returnButton.setSize(200f, 100f);
-        returnContainer = new Container<>(returnButton);
-        returnContainer.setTransform(true);
-        returnContainer.size(200f, 100f);
-        returnContainer.setOrigin(returnContainer.getWidth() / 2, returnContainer.getHeight() / 2);
-        returnContainer.setPosition(viewport.getWorldWidth() - returnButton.getWidth() - 20, viewport.getWorldHeight() - returnButton.getHeight() - 20);
-        returnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                returnContainer.addAction(Actions.sequence(
-                    Actions.scaleTo(1.1f, 1.1f, 0.2f),
-                    Actions.scaleTo(1f, 1f, 0.2f)
-                ));
-                soundManager.playSoundEffect();
-                transitionToMainMenuScreenScreen();
-            }
-        });
-        stage.addActor(returnContainer);
-    }
 
-    private void transitionToMainMenuScreenScreen() {
-        fadeActor.addAction(Actions.sequence(
-            Actions.alpha(0f),
-            Actions.fadeIn(0.5f),
-            Actions.run(() -> game.setScreen(new MainMenuScreen(game)))
-        ));
+        returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+            - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
+
+
+        stage.addActor(returnContainer);
     }
 
     @Override
