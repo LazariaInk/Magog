@@ -20,7 +20,6 @@ public class GameScreen extends ScreenAdapter {
     private SoundManager soundManager;
 
     public GameScreen(StartGame game) {
-        this.game = game;
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
