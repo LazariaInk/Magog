@@ -14,48 +14,49 @@ public class Character {
     private Animation<TextureRegion> idleAnimation;
     private Texture runTexture;
     private Animation<TextureRegion> runAnimation;
-    private float x;
-    private float y;
-    private float speed;
-    private boolean movingRight = false;
-    private boolean movingLeft = false;
-    private boolean facingRight = true;
-    private float elapsedTime = 0f;
-    private Sound runSound;
-    private long runSoundId = -1;
+    private Texture runAttackTexture, attackTexture;
+    private Animation<TextureRegion> runAttackAnimation, attackAnimation;
+    private float x, y, speed, elapsedTime = 0f, attackTime = 0f;
+    private boolean movingRight = false, movingLeft = false, facingRight = true;
+    private boolean attacking = false;
+    private final float attackDuration = 1f;
+    private Sound runSound, attackSound;
+    private long runSoundId = -1, attackSoundId = -1;
 
     private Character(Builder builder) {
         this.x = builder.x;
         this.y = builder.y;
         this.speed = builder.speed;
-
         this.idleTexture = builder.idleTexture;
-        TextureRegion[][] tmpIdleFrames = TextureRegion.split(idleTexture, idleTexture.getWidth() / 2, idleTexture.getHeight());
-        Array<TextureRegion> idleFrames = new Array<>();
-        for (TextureRegion[] row : tmpIdleFrames) {
-            for (TextureRegion region : row) {
-                idleFrames.add(region);
-            }
-        }
-        this.idleAnimation = new Animation<>(0.3f, idleFrames, Animation.PlayMode.LOOP);
-
+        this.idleAnimation = createAnimation(idleTexture, 2, 0.3f);
         this.runTexture = builder.runTexture;
-        TextureRegion[][] tmpRunFrames = TextureRegion.split(runTexture, runTexture.getWidth() / 7, runTexture.getHeight());
-        Array<TextureRegion> runFrames = new Array<>();
-        for (TextureRegion[] row : tmpRunFrames) {
+        this.runAnimation = createAnimation(runTexture, 7, 0.1f);
+        this.runAttackTexture = builder.runAttackTexture;
+        this.runAttackAnimation = createAnimation(runAttackTexture, 6, 0.1f);
+        this.attackTexture = builder.attackTexture;
+        this.attackAnimation = createAnimation(attackTexture, 4, 0.2f);
+        this.runSound = builder.runSound;
+        this.attackSound = builder.attackSound;
+    }
+
+    private Animation<TextureRegion> createAnimation(Texture texture, int frameCount, float frameDuration) {
+        TextureRegion[][] tmpFrames = TextureRegion.split(texture, texture.getWidth() / frameCount, texture.getHeight());
+        Array<TextureRegion> frames = new Array<>();
+        for (TextureRegion[] row : tmpFrames) {
             for (TextureRegion region : row) {
-                runFrames.add(region);
+                frames.add(region);
             }
         }
-        this.runAnimation = new Animation<>(0.1f, runFrames, Animation.PlayMode.LOOP);
-
-        this.runSound = builder.runSound;
+        return new Animation<>(frameDuration, frames, Animation.PlayMode.LOOP);
     }
 
     public void update(float delta) {
         elapsedTime += delta;
+
+        // Handle movement input
         movingLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A);
         movingRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D);
+
         if (movingRight) {
             x += speed * delta;
             facingRight = true;
@@ -67,6 +68,31 @@ public class Character {
         } else {
             stopRunSound();
         }
+
+        if (attacking) {
+            attackTime += delta;
+            if (attackTime > attackDuration) {
+                attacking = false;
+                attackTime = 0f;
+                stopAttackSound();
+            }
+        }
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return 64f * 4;
+    }
+
+    public float getHeight() {
+        return 64f * 4;
     }
 
     private void playRunSound() {
@@ -82,9 +108,36 @@ public class Character {
         }
     }
 
+    private void playAttackSound() {
+        if (attackSound != null && attackSoundId == -1) {
+            attackSoundId = attackSound.play(1.0f);
+        }
+    }
+
+    private void stopAttackSound() {
+        if (attackSoundId != -1) {
+            attackSound.stop(attackSoundId);
+            attackSoundId = -1;
+        }
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+        this.attackTime = 0f;
+        if (attacking) {
+            playAttackSound();
+        }
+    }
+
     public void render(SpriteBatch batch) {
         Animation<TextureRegion> currentAnimation;
-        if (movingLeft || movingRight) {
+        if (attacking) {
+            if (movingLeft || movingRight) {
+                currentAnimation = runAttackAnimation;
+            } else {
+                currentAnimation = attackAnimation;
+            }
+        } else if (movingLeft || movingRight) {
             currentAnimation = runAnimation;
         } else {
             currentAnimation = idleAnimation;
@@ -98,45 +151,26 @@ public class Character {
         float scaleFactor = 4.0f;
         float knightWidth = currentFrame.getRegionWidth() * scaleFactor;
         float knightHeight = currentFrame.getRegionHeight() * scaleFactor;
-
         batch.draw(currentFrame, x, y, knightWidth, knightHeight);
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 
     public void dispose() {
         idleTexture.dispose();
         runTexture.dispose();
+        runAttackTexture.dispose();
+        attackTexture.dispose();
         if (runSound != null) {
             runSound.dispose();
         }
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return 64f * 4;  // Example character width (based on scaling factor used in render method)
-    }
-
-    public float getHeight() {
-        return 64f * 4;  // Example character height (based on scaling factor used in render method)
+        if (attackSound != null) {
+            attackSound.dispose();
+        }
     }
 
     public static class Builder {
-        private Texture idleTexture;
-        private Texture runTexture;
-        private Sound runSound;
-        private float x = 0;
-        private float y = 0;
-        private float speed = 600f;
+        private Texture idleTexture, runTexture, runAttackTexture, attackTexture;
+        private Sound runSound, attackSound;
+        private float x = 0, y = 0, speed = 600f;
 
         public Builder setIdleTexture(Texture idleTexture) {
             this.idleTexture = idleTexture;
@@ -148,8 +182,23 @@ public class Character {
             return this;
         }
 
+        public Builder setRunAttackTexture(Texture runAttackTexture) {
+            this.runAttackTexture = runAttackTexture;
+            return this;
+        }
+
+        public Builder setAttackTexture(Texture attackTexture) {
+            this.attackTexture = attackTexture;
+            return this;
+        }
+
         public Builder setRunSound(Sound runSound) {
             this.runSound = runSound;
+            return this;
+        }
+
+        public Builder setAttackSound(Sound attackSound) {
+            this.attackSound = attackSound;
             return this;
         }
 
@@ -165,8 +214,8 @@ public class Character {
         }
 
         public Character build() {
-            if (idleTexture == null || runTexture == null) {
-                throw new IllegalStateException("Idle and Run textures must be set before building Character.");
+            if (idleTexture == null || runTexture == null || runAttackTexture == null || attackTexture == null) {
+                throw new IllegalStateException("All textures must be set before building Character.");
             }
             return new Character(this);
         }

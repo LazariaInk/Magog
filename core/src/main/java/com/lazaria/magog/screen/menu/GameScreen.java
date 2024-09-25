@@ -39,7 +39,10 @@ public class GameScreen extends ScreenAdapter {
         knight = new Character.Builder()
             .setIdleTexture(new Texture(Gdx.files.internal("idle.png")))
             .setRunTexture(new Texture(Gdx.files.internal("run.png")))
+            .setAttackTexture(new Texture(Gdx.files.internal("attack.png")))
+            .setRunAttackTexture(new Texture(Gdx.files.internal("runattack.png")))
             .setRunSound(Gdx.audio.newSound(Gdx.files.internal("run.wav")))
+            .setAttackSound(Gdx.audio.newSound(Gdx.files.internal("attack.mp3")))
             .setPosition(500, 50)
             .setSpeed(600f)
             .build();
@@ -65,8 +68,8 @@ public class GameScreen extends ScreenAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         knight.render(batch);
-        paddle.render(batch);  // Render paddle
-        ball.render(batch);  // Render ball
+        paddle.render(batch);
+        ball.render(batch);
         batch.end();
 
         stage.act(delta);
