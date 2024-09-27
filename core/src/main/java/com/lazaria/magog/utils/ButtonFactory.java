@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 
 public class ButtonFactory {
     private Actor fadeActor;
@@ -44,13 +44,13 @@ public class ButtonFactory {
                     Actions.scaleTo(1.1f, 1.1f, 0.2f),
                     Actions.scaleTo(1f, 1f, 0.2f)
                 ));
-                StartGame.getInstance().getSoundManager().playSoundEffect();
+                Settings.getInstance().getSoundManager().playSoundEffect();
                 try {
-                    Screen nextScreen = screenClass.getDeclaredConstructor(StartGame.class).newInstance(StartGame.getInstance());
+                    Screen nextScreen = screenClass.getDeclaredConstructor(Settings.class).newInstance(Settings.getInstance());
                     fadeActor.addAction(Actions.sequence(
                         Actions.alpha(0f),
                         Actions.fadeIn(0.5f),
-                        Actions.run(() -> StartGame.getInstance().setScreen(nextScreen))
+                        Actions.run(() -> Settings.getInstance().setScreen(nextScreen))
                     ));
                 } catch (Exception e) {
                     e.printStackTrace();

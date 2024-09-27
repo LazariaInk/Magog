@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.Character;
 import com.lazaria.magog.Paddle;
@@ -28,7 +28,7 @@ public class GameScreen extends ScreenAdapter {
     private Container<ImageButton> returnContainer;
     private ButtonFactory buttonFactory;
 
-    public GameScreen(StartGame game) {
+    public GameScreen(Settings game) {
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);

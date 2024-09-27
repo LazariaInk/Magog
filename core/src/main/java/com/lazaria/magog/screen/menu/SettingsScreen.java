@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.utils.ButtonFactory;
 
@@ -31,7 +31,7 @@ public class SettingsScreen extends ScreenAdapter {
     private SoundManager soundManager;
     private ButtonFactory buttonFactory;
 
-    public SettingsScreen(StartGame game) {
+    public SettingsScreen(Settings game) {
         soundManager = game.getSoundManager();
         buttonFactory = new ButtonFactory();
 

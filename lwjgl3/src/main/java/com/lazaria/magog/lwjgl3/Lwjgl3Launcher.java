@@ -2,7 +2,7 @@ package com.lazaria.magog.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
@@ -11,7 +11,7 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new StartGame(), getDefaultConfiguration());
+        return new Lwjgl3Application(new Settings(), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

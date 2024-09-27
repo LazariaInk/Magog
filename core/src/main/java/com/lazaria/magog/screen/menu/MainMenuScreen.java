@@ -9,13 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 import com.lazaria.magog.utils.ButtonFactory;
 
 import java.util.ArrayList;
 
 public class MainMenuScreen extends ScreenAdapter {
-    private StartGame game;
+    private Settings game;
     private Texture backgroundTexture;
     private Texture leafTexture;
     private SpriteBatch batch;
@@ -27,7 +27,7 @@ public class MainMenuScreen extends ScreenAdapter {
     private ArrayList<FallingLeaf> fallingLeaves;
     private ButtonFactory buttonFactory;
 
-    public MainMenuScreen(StartGame game) {
+    public MainMenuScreen(Settings game) {
         this.game = game;
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
