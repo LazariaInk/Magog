@@ -25,7 +25,6 @@ public class Ball {
         this.speedX = speed;
         this.speedY = -speed;
 
-        // Create the ball animation using 5 frames
         Array<TextureRegion> frames = new Array<>();
         for (int i = 1; i <= 5; i++) {
             Texture ballTexture = new Texture(Gdx.files.internal("ball" + i + ".png"));
@@ -79,27 +78,25 @@ public class Ball {
             && y - radius < paddle.getY() + paddle.getHeight() && y + radius > paddle.getY();
     }
 
-    // Calculate the rotation angle based on the ball's movement
     private float calculateRotationAngle() {
-        return (float) Math.toDegrees(Math.atan2(speedY, speedX)) - 90; // Adjust by 90 degrees to match the ball's orientation
+        return (float) Math.toDegrees(Math.atan2(speedY, speedX)) - 90;
     }
 
     public void render(SpriteBatch batch) {
         TextureRegion currentFrame = ballAnimation.getKeyFrame(elapsedTime, true);
-        float rotationAngle = calculateRotationAngle(); // Calculate the angle based on movement
+        float rotationAngle = calculateRotationAngle();
 
-        // Draw the ball with rotation
         batch.draw(currentFrame,
-            x - radius, y - radius,       // Position the ball at its center
-            radius, radius,               // Origin of rotation is the ball's center
-            radius * 2, radius * 2,       // Width and height of the ball
-            1, 1,                         // Scaling
-            rotationAngle);               // Rotation based on movement angle
+            x - radius, y - radius,
+            radius, radius,
+            radius * 2, radius * 2,
+            1, 1,
+            rotationAngle);
     }
 
     public void dispose() {
         for (TextureRegion region : ballAnimation.getKeyFrames()) {
-            region.getTexture().dispose();  // Dispose each texture used in the animation
+            region.getTexture().dispose();
         }
     }
 }

@@ -16,13 +16,13 @@ public class Paddle {
 
     public void update(float knightX, float knightY, float knightWidth, float knightHeight) {
         this.x = knightX + knightWidth / 2 - width / 2;
-        this.y = knightY + knightHeight;  // Paddle is above the character
+        this.y = knightY + knightHeight;
     }
 
     public void render(SpriteBatch batch) {
-        batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);  // Set transparency to 50%
+        batch.setColor(1.0f, 1.0f, 1.0f, 0.5f);
         batch.draw(texture, x, y, width, height);
-        batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);  // Reset color
+        batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     public void dispose() {

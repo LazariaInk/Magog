@@ -62,8 +62,8 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
         knight.update(delta);
-        ball.update(delta, knight, paddle);  // Update ball with both knight and paddle
-        paddle.update(knight.getX(), knight.getY(), knight.getWidth(), knight.getHeight());  // Update paddle to follow knight
+        ball.update(delta, knight, paddle);
+        paddle.update(knight.getX(), knight.getY(), knight.getWidth(), knight.getHeight());
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
