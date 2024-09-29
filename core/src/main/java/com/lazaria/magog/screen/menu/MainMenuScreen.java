@@ -14,8 +14,8 @@ import com.lazaria.magog.utils.ButtonFactory;
 
 import java.util.ArrayList;
 
-public class MainMenuScreen extends ScreenAdapter {
-    private StartGame game;
+public class
+MainMenuScreen extends ScreenAdapter {
     private Texture backgroundTexture;
     private Texture leafTexture;
     private SpriteBatch batch;
@@ -28,7 +28,6 @@ public class MainMenuScreen extends ScreenAdapter {
     private ButtonFactory buttonFactory;
 
     public MainMenuScreen(StartGame game) {
-        this.game = game;
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
@@ -58,8 +57,7 @@ public class MainMenuScreen extends ScreenAdapter {
         settingsContainer = buttonFactory.createButton("settings.png", 200f, 100f, viewport.getWorldWidth() - 200f - 20,
             viewport.getWorldHeight() - 100f - 20, SettingsScreen.class, stage);
 
-        profileContainer = buttonFactory.createButton("profile.png", 400f, 200f, 300, 200,
-            SettingsScreen.class, stage);
+     profileContainer = buttonFactory.createButton("profile.png",300f,150f,200,viewport.getWorldHeight() - 100f - 20,ProfileScreen.class,stage);
     }
 
     @Override

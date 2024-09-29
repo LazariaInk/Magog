@@ -36,16 +36,7 @@ public class GameScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("firstMap.png"));
 
-        knight = new Character.Builder()
-            .setIdleTexture(new Texture(Gdx.files.internal("idle.png")))
-            .setRunTexture(new Texture(Gdx.files.internal("run.png")))
-            .setAttackTexture(new Texture(Gdx.files.internal("attack.png")))
-            .setRunAttackTexture(new Texture(Gdx.files.internal("runattack.png")))
-            .setRunSound(Gdx.audio.newSound(Gdx.files.internal("run.wav")))
-            .setAttackSound(Gdx.audio.newSound(Gdx.files.internal("attack.mp3")))
-            .setPosition(500, 50)
-            .setSpeed(600f)
-            .build();
+        knight = StartGame.getInstance().getSelectedCharacter();
         returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         paddle = new Paddle(200, 20);
