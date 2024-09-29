@@ -33,7 +33,7 @@ public class Ball {
         ballAnimation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
     }
 
-    public void update(float delta, Character knight, Paddle paddle) {
+    public void update(float delta, Character character, Paddle paddle) {
         elapsedTime += delta;
         x += speedX * delta;
         y += speedY * delta;
@@ -44,9 +44,9 @@ public class Ball {
             speedX = hitPosition * speed;
 
             if (knightMoving()) {
-                knight.setAttacking(true);
+                character.setAttacking(true);
             } else {
-                knight.setAttacking(true);
+                character.setAttacking(true);
             }
         }
         if (x < 0 || x > 1920 - radius * 2) {
@@ -57,7 +57,7 @@ public class Ball {
         }
         if (y < 0) {
             resetBall();
-            knight.setAttacking(false);
+            character.setAttacking(false);
         }
     }
 

@@ -21,14 +21,14 @@ public class GameScreen extends ScreenAdapter {
     private FitViewport viewport;
     private SpriteBatch batch;
     private Texture backgroundTexture;
-    private Character knight;
+    private Character character;
     private Paddle paddle;
     private Ball ball;
     private SoundManager soundManager;
     private Container<ImageButton> returnContainer;
     private ButtonFactory buttonFactory;
 
-    public GameScreen(Settings game) {
+    public GameScreen() {
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
@@ -36,13 +36,13 @@ public class GameScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("firstMap.png"));
 
-        knight = StartGame.getInstance().getSelectedCharacter();
+        character = Settings.getInstance().getSelectedCharacter();
         returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         paddle = new Paddle(200, 20);
         ball = new Ball(560, 1000f, 500f);
 
-        soundManager = game.getSoundManager();
+        soundManager = Settings.getInstance().getSoundManager();
         stage.addActor(returnContainer);
         soundManager.playGameMusic();
     }
@@ -52,13 +52,13 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(viewport.getCamera().combined);
 
-        knight.update(delta);
-        ball.update(delta, knight, paddle);
-        paddle.update(knight.getX(), knight.getY(), knight.getWidth(), knight.getHeight());
+        character.update(delta);
+        ball.update(delta, character, paddle);
+        paddle.update(character.getX(), character.getY(), character.getWidth(), character.getHeight());
 
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-        knight.render(batch);
+        character.render(batch);
         paddle.render(batch);
         ball.render(batch);
         batch.end();
@@ -76,7 +76,7 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
         batch.dispose();
         backgroundTexture.dispose();
-        knight.dispose();
+        character.dispose();
         ball.dispose();
         paddle.dispose();
         stage.dispose();

@@ -9,37 +9,35 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-public class Character {
-    private Texture idleTexture;
-    private Animation<TextureRegion> idleAnimation;
-    private Texture runTexture;
-    private Animation<TextureRegion> runAnimation;
-    private Texture runAttackTexture, attackTexture;
-    private Animation<TextureRegion> runAttackAnimation, attackAnimation;
-    private float x, y, speed, elapsedTime = 0f, attackTime = 0f;
-    private boolean movingRight = false, movingLeft = false, facingRight = true;
-    private boolean attacking = false;
-    private final float attackDuration = 1f;
-    private Sound runSound, attackSound;
+public abstract class Character {
+    protected Texture idleTexture, runTexture, runAttackTexture, attackTexture;
+    protected Animation<TextureRegion> idleAnimation, runAnimation, runAttackAnimation, attackAnimation;
+    protected float x, y, speed, elapsedTime = 0f, attackTime = 0f;
+    protected boolean movingRight = false, movingLeft = false, facingRight = true;
+    protected boolean attacking = false;
+    protected final float attackDuration = 1f;
+    protected Sound runSound, attackSound;
     private long runSoundId = -1, attackSoundId = -1;
 
-    private Character(Builder builder) {
-        this.x = builder.x;
-        this.y = builder.y;
-        this.speed = builder.speed;
-        this.idleTexture = builder.idleTexture;
+    // Constructor for common Character attributes
+    protected Character(Texture idleTexture, Texture runTexture, Texture runAttackTexture, Texture attackTexture,
+                        Sound runSound, Sound attackSound, float x, float y, float speed) {
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.idleTexture = idleTexture;
         this.idleAnimation = createAnimation(idleTexture, 2, 0.3f);
-        this.runTexture = builder.runTexture;
+        this.runTexture = runTexture;
         this.runAnimation = createAnimation(runTexture, 7, 0.1f);
-        this.runAttackTexture = builder.runAttackTexture;
+        this.runAttackTexture = runAttackTexture;
         this.runAttackAnimation = createAnimation(runAttackTexture, 6, 0.1f);
-        this.attackTexture = builder.attackTexture;
+        this.attackTexture = attackTexture;
         this.attackAnimation = createAnimation(attackTexture, 4, 0.2f);
-        this.runSound = builder.runSound;
-        this.attackSound = builder.attackSound;
+        this.runSound = runSound;
+        this.attackSound = attackSound;
     }
 
-    private Animation<TextureRegion> createAnimation(Texture texture, int frameCount, float frameDuration) {
+    protected Animation<TextureRegion> createAnimation(Texture texture, int frameCount, float frameDuration) {
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, texture.getWidth() / frameCount, texture.getHeight());
         Array<TextureRegion> frames = new Array<>();
         for (TextureRegion[] row : tmpFrames) {
@@ -50,10 +48,194 @@ public class Character {
         return new Animation<>(frameDuration, frames, Animation.PlayMode.LOOP);
     }
 
+    public Texture getIdleTexture() {
+        return idleTexture;
+    }
+
+    public void setIdleTexture(Texture idleTexture) {
+        this.idleTexture = idleTexture;
+    }
+
+    public Texture getRunTexture() {
+        return runTexture;
+    }
+
+    public float getWidth() {
+        return 64f * 4;
+    }
+
+    public float getHeight() {
+        return 64f * 4;
+    }
+
+
+    public void setRunTexture(Texture runTexture) {
+        this.runTexture = runTexture;
+    }
+
+    public Texture getRunAttackTexture() {
+        return runAttackTexture;
+    }
+
+    public void setRunAttackTexture(Texture runAttackTexture) {
+        this.runAttackTexture = runAttackTexture;
+    }
+
+    public Texture getAttackTexture() {
+        return attackTexture;
+    }
+
+    public void setAttackTexture(Texture attackTexture) {
+        this.attackTexture = attackTexture;
+    }
+
+    public Animation<TextureRegion> getIdleAnimation() {
+        return idleAnimation;
+    }
+
+    public void setIdleAnimation(Animation<TextureRegion> idleAnimation) {
+        this.idleAnimation = idleAnimation;
+    }
+
+    public Animation<TextureRegion> getRunAnimation() {
+        return runAnimation;
+    }
+
+    public void setRunAnimation(Animation<TextureRegion> runAnimation) {
+        this.runAnimation = runAnimation;
+    }
+
+    public Animation<TextureRegion> getRunAttackAnimation() {
+        return runAttackAnimation;
+    }
+
+    public void setRunAttackAnimation(Animation<TextureRegion> runAttackAnimation) {
+        this.runAttackAnimation = runAttackAnimation;
+    }
+
+    public Animation<TextureRegion> getAttackAnimation() {
+        return attackAnimation;
+    }
+
+    public void setAttackAnimation(Animation<TextureRegion> attackAnimation) {
+        this.attackAnimation = attackAnimation;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public float getElapsedTime() {
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(float elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
+    public float getAttackTime() {
+        return attackTime;
+    }
+
+    public void setAttackTime(float attackTime) {
+        this.attackTime = attackTime;
+    }
+
+    public boolean isMovingRight() {
+        return movingRight;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+    public boolean isMovingLeft() {
+        return movingLeft;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
+    public boolean isFacingRight() {
+        return facingRight;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
+
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    public float getAttackDuration() {
+        return attackDuration;
+    }
+
+    public Sound getRunSound() {
+        return runSound;
+    }
+
+    public void setRunSound(Sound runSound) {
+        this.runSound = runSound;
+    }
+
+    public Sound getAttackSound() {
+        return attackSound;
+    }
+
+    public void setAttackSound(Sound attackSound) {
+        this.attackSound = attackSound;
+    }
+
+    public long getRunSoundId() {
+        return runSoundId;
+    }
+
+    public void setRunSoundId(long runSoundId) {
+        this.runSoundId = runSoundId;
+    }
+
+    public long getAttackSoundId() {
+        return attackSoundId;
+    }
+
+    public void setAttackSoundId(long attackSoundId) {
+        this.attackSoundId = attackSoundId;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+        this.attackTime = 0f;
+        if (attacking) {
+            playAttackSound();
+        }
+    }
+
+    // Common update logic
     public void update(float delta) {
         elapsedTime += delta;
-
-        // Handle movement input
         movingLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A);
         movingRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D);
 
@@ -79,20 +261,22 @@ public class Character {
         }
     }
 
-    public float getX() {
-        return x;
-    }
+    // Abstract method for performing unique skills
+    public abstract void performSkill();
 
-    public float getY() {
-        return y;
-    }
+    public void render(SpriteBatch batch) {
+        Animation<TextureRegion> currentAnimation = attacking
+            ? (movingLeft || movingRight ? runAttackAnimation : attackAnimation)
+            : (movingLeft || movingRight ? runAnimation : idleAnimation);
 
-    public float getWidth() {
-        return 64f * 4;
-    }
+        TextureRegion currentFrame = currentAnimation.getKeyFrame(elapsedTime, true);
+        if (facingRight && currentFrame.isFlipX()) currentFrame.flip(true, false);
+        if (!facingRight && !currentFrame.isFlipX()) currentFrame.flip(true, false);
 
-    public float getHeight() {
-        return 64f * 4;
+        float scaleFactor = 4.0f;
+        float knightWidth = currentFrame.getRegionWidth() * scaleFactor;
+        float knightHeight = currentFrame.getRegionHeight() * scaleFactor;
+        batch.draw(currentFrame, x, y, knightWidth, knightHeight);
     }
 
     private void playRunSound() {
@@ -121,103 +305,12 @@ public class Character {
         }
     }
 
-    public void setAttacking(boolean attacking) {
-        this.attacking = attacking;
-        this.attackTime = 0f;
-        if (attacking) {
-            playAttackSound();
-        }
-    }
-
-    public void render(SpriteBatch batch) {
-        Animation<TextureRegion> currentAnimation;
-        if (attacking) {
-            if (movingLeft || movingRight) {
-                currentAnimation = runAttackAnimation;
-            } else {
-                currentAnimation = attackAnimation;
-            }
-        } else if (movingLeft || movingRight) {
-            currentAnimation = runAnimation;
-        } else {
-            currentAnimation = idleAnimation;
-        }
-        TextureRegion currentFrame = currentAnimation.getKeyFrame(elapsedTime, true);
-        if (facingRight && currentFrame.isFlipX()) {
-            currentFrame.flip(true, false);
-        } else if (!facingRight && !currentFrame.isFlipX()) {
-            currentFrame.flip(true, false);
-        }
-        float scaleFactor = 4.0f;
-        float knightWidth = currentFrame.getRegionWidth() * scaleFactor;
-        float knightHeight = currentFrame.getRegionHeight() * scaleFactor;
-        batch.draw(currentFrame, x, y, knightWidth, knightHeight);
-    }
-
     public void dispose() {
         idleTexture.dispose();
         runTexture.dispose();
         runAttackTexture.dispose();
         attackTexture.dispose();
-        if (runSound != null) {
-            runSound.dispose();
-        }
-        if (attackSound != null) {
-            attackSound.dispose();
-        }
-    }
-
-    public static class Builder {
-        private Texture idleTexture, runTexture, runAttackTexture, attackTexture;
-        private Sound runSound, attackSound;
-        private float x = 0, y = 0, speed = 600f;
-
-        public Builder setIdleTexture(Texture idleTexture) {
-            this.idleTexture = idleTexture;
-            return this;
-        }
-
-        public Builder setRunTexture(Texture runTexture) {
-            this.runTexture = runTexture;
-            return this;
-        }
-
-        public Builder setRunAttackTexture(Texture runAttackTexture) {
-            this.runAttackTexture = runAttackTexture;
-            return this;
-        }
-
-        public Builder setAttackTexture(Texture attackTexture) {
-            this.attackTexture = attackTexture;
-            return this;
-        }
-
-        public Builder setRunSound(Sound runSound) {
-            this.runSound = runSound;
-            return this;
-        }
-
-        public Builder setAttackSound(Sound attackSound) {
-            this.attackSound = attackSound;
-            return this;
-        }
-
-        public Builder setPosition(float x, float y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        }
-
-        public Builder setSpeed(float speed) {
-            this.speed = speed;
-            return this;
-        }
-
-        public Character build() {
-            if (idleTexture == null || runTexture == null || runAttackTexture == null || attackTexture == null) {
-                throw new IllegalStateException("All textures must be set before building Character.");
-            }
-            return new Character(this);
-        }
+        if (runSound != null) runSound.dispose();
+        if (attackSound != null) attackSound.dispose();
     }
 }

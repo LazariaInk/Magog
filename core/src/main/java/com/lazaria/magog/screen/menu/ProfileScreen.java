@@ -14,11 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.StartGame;
+import com.lazaria.magog.Settings;
 import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.utils.ButtonFactory;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -37,7 +35,7 @@ public class ProfileScreen extends ScreenAdapter {
     private SoundManager soundManager;
     private ButtonFactory buttonFactory;
 
-    public ProfileScreen(StartGame game) {
+    public ProfileScreen(Settings game) {
         soundManager = game.getSoundManager();
         buttonFactory = new ButtonFactory();
 
@@ -66,11 +64,11 @@ public class ProfileScreen extends ScreenAdapter {
         returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
 
-        knightButtonContainer = buttonFactory.createButton("knight.png",500,600,500, viewport.getWorldHeight()-550, ProfileScreen.class,stage);
+        knightButtonContainer = buttonFactory.createButton("knight.png",500,600,500, viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
 
-        necromantButtonContainer = buttonFactory.createButton("necromant.png",500,600,1000,viewport.getWorldHeight()-550, ProfileScreen.class,stage);
+        necromantButtonContainer = buttonFactory.createButton("necromant.png",500,600,1000,viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
 
-        assassinButtonContainer=buttonFactory.createButton("shadow.png",500,600,1500,viewport.getWorldHeight()-550, ProfileScreen.class,stage);
+        assassinButtonContainer=buttonFactory.createButton("shadow.png",500,600,1500,viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
 
         addHoverEffect(knightButtonContainer);
         addHoverEffect(necromantButtonContainer);
@@ -105,7 +103,7 @@ public class ProfileScreen extends ScreenAdapter {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 System.out.println("An intrat in hover");
-                buttonContainer.addAction(Actions.scaleTo(1.1f, 1.1f, 0.2f));  // Scalare fină pe 0.2 secunde
+                buttonContainer.addAction(Actions.scaleTo(1.1f, 1.1f, 0.2f));
                 super.enter(event, x, y, pointer, fromActor);
             }
 

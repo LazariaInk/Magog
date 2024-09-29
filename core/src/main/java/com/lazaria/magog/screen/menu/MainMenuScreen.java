@@ -59,7 +59,7 @@ public class MainMenuScreen extends ScreenAdapter {
             viewport.getWorldHeight() - 100f - 20, SettingsScreen.class, stage);
 
         profileContainer = buttonFactory.createButton("profile.png", 400f, 200f, 300, 200,
-            SettingsScreen.class, stage);
+            ProfileScreen.class, stage);
     }
 
     @Override
