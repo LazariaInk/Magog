@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.screen.menu.MainMenuScreen;
 
-public class StartGame extends Game {
-    private static StartGame instance;
+public class Settings extends Game {
+    private static Settings instance;
     private SoundManager soundManager;
     private Character selectedCharacter;
 
-    public static StartGame getInstance() {
+    public static Settings getInstance() {
         return instance;
     }
 

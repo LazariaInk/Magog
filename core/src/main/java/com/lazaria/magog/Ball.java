@@ -3,26 +3,38 @@ package com.lazaria.magog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class Ball {
     private float x, y;
     private float speedX, speedY;
     private float speed;
-    private Texture texture;
     private float radius;
+    private float elapsedTime = 0f;
+
+    private Animation<TextureRegion> ballAnimation;
 
     public Ball(float x, float y, float speed) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.texture = new Texture("ball.png");
         this.radius = 20f;
         this.speedX = speed;
         this.speedY = -speed;
+
+        Array<TextureRegion> frames = new Array<>();
+        for (int i = 1; i <= 5; i++) {
+            Texture ballTexture = new Texture(Gdx.files.internal("ball" + i + ".png"));
+            frames.add(new TextureRegion(ballTexture));
+        }
+        ballAnimation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
     }
 
     public void update(float delta, Character knight, Paddle paddle) {
+        elapsedTime += delta;
         x += speedX * delta;
         y += speedY * delta;
 
@@ -66,11 +78,25 @@ public class Ball {
             && y - radius < paddle.getY() + paddle.getHeight() && y + radius > paddle.getY();
     }
 
+    private float calculateRotationAngle() {
+        return (float) Math.toDegrees(Math.atan2(speedY, speedX)) - 90;
+    }
+
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x - radius, y - radius, radius * 2, radius * 2);
+        TextureRegion currentFrame = ballAnimation.getKeyFrame(elapsedTime, true);
+        float rotationAngle = calculateRotationAngle();
+
+        batch.draw(currentFrame,
+            x - radius, y - radius,
+            radius, radius,
+            radius * 2, radius * 2,
+            1, 1,
+            rotationAngle);
     }
 
     public void dispose() {
-        texture.dispose();
+        for (TextureRegion region : ballAnimation.getKeyFrames()) {
+            region.getTexture().dispose();
+        }
     }
 }
