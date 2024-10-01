@@ -46,7 +46,7 @@ public class ButtonFactory {
                 ));
                 Settings.getInstance().getSoundManager().playSoundEffect();
                 try {
-                    Screen nextScreen = screenClass.getDeclaredConstructor(Settings.class).newInstance(Settings.getInstance());
+                    Screen nextScreen = screenClass.getDeclaredConstructor().newInstance();
                     fadeActor.addAction(Actions.sequence(
                         Actions.alpha(0f),
                         Actions.fadeIn(0.5f),

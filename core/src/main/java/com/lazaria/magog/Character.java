@@ -19,7 +19,6 @@ public abstract class Character {
     protected Sound runSound, attackSound;
     private long runSoundId = -1, attackSoundId = -1;
 
-    // Constructor for common Character attributes
     protected Character(Texture idleTexture, Texture runTexture, Texture runAttackTexture, Texture attackTexture,
                         Sound runSound, Sound attackSound, float x, float y, float speed) {
         this.x = x;
@@ -48,18 +47,6 @@ public abstract class Character {
         return new Animation<>(frameDuration, frames, Animation.PlayMode.LOOP);
     }
 
-    public Texture getIdleTexture() {
-        return idleTexture;
-    }
-
-    public void setIdleTexture(Texture idleTexture) {
-        this.idleTexture = idleTexture;
-    }
-
-    public Texture getRunTexture() {
-        return runTexture;
-    }
-
     public float getWidth() {
         return 64f * 4;
     }
@@ -68,161 +55,12 @@ public abstract class Character {
         return 64f * 4;
     }
 
-
-    public void setRunTexture(Texture runTexture) {
-        this.runTexture = runTexture;
-    }
-
-    public Texture getRunAttackTexture() {
-        return runAttackTexture;
-    }
-
-    public void setRunAttackTexture(Texture runAttackTexture) {
-        this.runAttackTexture = runAttackTexture;
-    }
-
-    public Texture getAttackTexture() {
-        return attackTexture;
-    }
-
-    public void setAttackTexture(Texture attackTexture) {
-        this.attackTexture = attackTexture;
-    }
-
-    public Animation<TextureRegion> getIdleAnimation() {
-        return idleAnimation;
-    }
-
-    public void setIdleAnimation(Animation<TextureRegion> idleAnimation) {
-        this.idleAnimation = idleAnimation;
-    }
-
-    public Animation<TextureRegion> getRunAnimation() {
-        return runAnimation;
-    }
-
-    public void setRunAnimation(Animation<TextureRegion> runAnimation) {
-        this.runAnimation = runAnimation;
-    }
-
-    public Animation<TextureRegion> getRunAttackAnimation() {
-        return runAttackAnimation;
-    }
-
-    public void setRunAttackAnimation(Animation<TextureRegion> runAttackAnimation) {
-        this.runAttackAnimation = runAttackAnimation;
-    }
-
-    public Animation<TextureRegion> getAttackAnimation() {
-        return attackAnimation;
-    }
-
-    public void setAttackAnimation(Animation<TextureRegion> attackAnimation) {
-        this.attackAnimation = attackAnimation;
-    }
-
     public float getX() {
         return x;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
     public float getY() {
         return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public float getElapsedTime() {
-        return elapsedTime;
-    }
-
-    public void setElapsedTime(float elapsedTime) {
-        this.elapsedTime = elapsedTime;
-    }
-
-    public float getAttackTime() {
-        return attackTime;
-    }
-
-    public void setAttackTime(float attackTime) {
-        this.attackTime = attackTime;
-    }
-
-    public boolean isMovingRight() {
-        return movingRight;
-    }
-
-    public void setMovingRight(boolean movingRight) {
-        this.movingRight = movingRight;
-    }
-
-    public boolean isMovingLeft() {
-        return movingLeft;
-    }
-
-    public void setMovingLeft(boolean movingLeft) {
-        this.movingLeft = movingLeft;
-    }
-
-    public boolean isFacingRight() {
-        return facingRight;
-    }
-
-    public void setFacingRight(boolean facingRight) {
-        this.facingRight = facingRight;
-    }
-
-    public boolean isAttacking() {
-        return attacking;
-    }
-
-    public float getAttackDuration() {
-        return attackDuration;
-    }
-
-    public Sound getRunSound() {
-        return runSound;
-    }
-
-    public void setRunSound(Sound runSound) {
-        this.runSound = runSound;
-    }
-
-    public Sound getAttackSound() {
-        return attackSound;
-    }
-
-    public void setAttackSound(Sound attackSound) {
-        this.attackSound = attackSound;
-    }
-
-    public long getRunSoundId() {
-        return runSoundId;
-    }
-
-    public void setRunSoundId(long runSoundId) {
-        this.runSoundId = runSoundId;
-    }
-
-    public long getAttackSoundId() {
-        return attackSoundId;
-    }
-
-    public void setAttackSoundId(long attackSoundId) {
-        this.attackSoundId = attackSoundId;
     }
 
     public void setAttacking(boolean attacking) {
@@ -233,11 +71,14 @@ public abstract class Character {
         }
     }
 
-    // Common update logic
     public void update(float delta) {
         elapsedTime += delta;
         movingLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A);
         movingRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            performSkill();
+        }
 
         if (movingRight) {
             x += speed * delta;
@@ -261,7 +102,6 @@ public abstract class Character {
         }
     }
 
-    // Abstract method for performing unique skills
     public abstract void performSkill();
 
     public void render(SpriteBatch batch) {

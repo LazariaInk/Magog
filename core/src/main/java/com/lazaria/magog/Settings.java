@@ -28,8 +28,8 @@ public class Settings extends Game {
     @Override
     public void create() {
         instance = this;
-        setSelectedCharacter(new Knight(500,50,600f));
+        setSelectedCharacter(new Knight(500,50,600f, null));
         soundManager = SoundManager.getInstance();
-        setScreen(new MainMenuScreen(this));
+        setScreen(new MainMenuScreen());
     }
 }

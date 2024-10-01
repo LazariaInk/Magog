@@ -9,11 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.Settings;
-import com.lazaria.magog.audio.SoundManager;
+import com.lazaria.magog.*;
 import com.lazaria.magog.Character;
-import com.lazaria.magog.Paddle;
-import com.lazaria.magog.Ball;
+import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.utils.ButtonFactory;
 
 public class GameScreen extends ScreenAdapter {
@@ -40,6 +38,8 @@ public class GameScreen extends ScreenAdapter {
         returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         paddle = new Paddle(200, 20);
+        Knight knight = (Knight) character;
+        knight.setPaddle(paddle);
         ball = new Ball(560, 1000f, 500f);
 
         soundManager = Settings.getInstance().getSoundManager();
@@ -51,7 +51,6 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(viewport.getCamera().combined);
-
         character.update(delta);
         ball.update(delta, character, paddle);
         paddle.update(character.getX(), character.getY(), character.getWidth(), character.getHeight());

@@ -44,4 +44,8 @@ public class Paddle {
     public float getHeight() {
         return height;
     }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
 }

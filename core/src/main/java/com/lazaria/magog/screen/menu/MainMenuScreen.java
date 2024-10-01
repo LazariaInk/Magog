@@ -15,7 +15,6 @@ import com.lazaria.magog.utils.ButtonFactory;
 import java.util.ArrayList;
 
 public class MainMenuScreen extends ScreenAdapter {
-    private Settings game;
     private Texture backgroundTexture;
     private Texture leafTexture;
     private SpriteBatch batch;
@@ -27,14 +26,13 @@ public class MainMenuScreen extends ScreenAdapter {
     private ArrayList<FallingLeaf> fallingLeaves;
     private ButtonFactory buttonFactory;
 
-    public MainMenuScreen(Settings game) {
-        this.game = game;
+    public MainMenuScreen() {
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
         leafTexture = new Texture(Gdx.files.internal("leaf.png"));
-        game.getSoundManager().playMenuMusic();
+        Settings.getInstance().getSoundManager().playMenuMusic();
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
