@@ -40,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
         paddle = new Paddle(200, 20);
         Knight knight = (Knight) character;
         knight.setPaddle(paddle);
-        ball = new Ball(560, 1000f, 500f);
+        ball = new Ball(560, 1000f, 1000f);
 
         soundManager = Settings.getInstance().getSoundManager();
         stage.addActor(returnContainer);

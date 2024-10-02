@@ -13,8 +13,11 @@ public class Knight extends Character {
     private float shieldDuration = 3.0f;
     private float shieldTimer = 0f;
 
-    private Texture defendTexture;
-    private Animation<TextureRegion> defendAnimation;
+    private Texture defendTextureIdle;
+    private Animation<TextureRegion> defendAnimationIdle;
+
+    private Texture defendTextureMoving;
+    private Animation<TextureRegion> defendAnimationMoving;
 
     public Knight(float x, float y, float speed, Paddle paddle) {
         super(
@@ -28,8 +31,11 @@ public class Knight extends Character {
         );
         this.paddle = paddle;
 
-        this.defendTexture = new Texture(Gdx.files.internal("defend.png"));
-        this.defendAnimation = createAnimation(defendTexture, 5, 0.2f);
+        this.defendTextureIdle = new Texture(Gdx.files.internal("defend.png"));
+        this.defendAnimationIdle = createAnimation(defendTextureIdle, 5, 0.2f); // 5 frames for idle defense
+
+        this.defendTextureMoving = new Texture(Gdx.files.internal("knight_skill.png"));
+        this.defendAnimationMoving = createAnimation(defendTextureMoving, 7, 0.1f); // 7 frames for moving defense
     }
 
     public void setPaddle(Paddle paddle) {
@@ -65,7 +71,11 @@ public class Knight extends Character {
         Animation<TextureRegion> currentAnimation;
 
         if (shieldActive) {
-            currentAnimation = defendAnimation;
+            if (movingLeft || movingRight) {
+                currentAnimation = defendAnimationMoving;
+            } else {
+                currentAnimation = defendAnimationIdle;
+            }
         } else {
             currentAnimation = attacking
                 ? (movingLeft || movingRight ? runAttackAnimation : attackAnimation)
@@ -73,6 +83,7 @@ public class Knight extends Character {
         }
 
         TextureRegion currentFrame = currentAnimation.getKeyFrame(elapsedTime, true);
+
         if (facingRight && currentFrame.isFlipX()) currentFrame.flip(true, false);
         if (!facingRight && !currentFrame.isFlipX()) currentFrame.flip(true, false);
 
@@ -85,8 +96,10 @@ public class Knight extends Character {
     @Override
     public void dispose() {
         super.dispose();
-        defendTexture.dispose();
+        defendTextureIdle.dispose();
+        defendTextureMoving.dispose();
     }
+
     public Animation<TextureRegion> createAnimation(Texture texture, int frameCount, float frameDuration) {
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, texture.getWidth() / frameCount, texture.getHeight());
         Array<TextureRegion> frames = new Array<>();

@@ -15,7 +15,7 @@ public abstract class Character {
     protected float x, y, speed, elapsedTime = 0f, attackTime = 0f;
     protected boolean movingRight = false, movingLeft = false, facingRight = true;
     protected boolean attacking = false;
-    protected final float attackDuration = 1f;
+    protected final float attackDuration = 0.4f;
     protected Sound runSound, attackSound;
     private long runSoundId = -1, attackSoundId = -1;
 
@@ -29,8 +29,9 @@ public abstract class Character {
         this.runTexture = runTexture;
         this.runAnimation = createAnimation(runTexture, 7, 0.1f);
         this.runAttackTexture = runAttackTexture;
-        this.runAttackAnimation = createAnimation(runAttackTexture, 6, 0.1f);
+
         this.attackTexture = attackTexture;
+        this.runAttackAnimation = createAnimation(attackTexture, 4, 0.05f);
         this.attackAnimation = createAnimation(attackTexture, 4, 0.2f);
         this.runSound = runSound;
         this.attackSound = attackSound;
