@@ -14,37 +14,27 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.lazaria.magog.Settings;
-import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.utils.ButtonFactory;
 
 import java.util.ArrayList;
 
 public class ProfileScreen extends ScreenAdapter {
-    private Stage stage;
-    private FitViewport viewport;
-    private SpriteBatch batch;
-    private Texture backgroundTexture;
-    private Texture leafTexture;
-    private ArrayList<FallingLeaf> fallingLeaves;
-    private Container<ImageButton> returnContainer;
-    private Container<ImageButton> knightButtonContainer;
-    private Container<ImageButton> necromantButtonContainer;
-    private Container<ImageButton> assassinButtonContainer;
-    private Actor fadeActor;
-    private SoundManager soundManager;
-    private ButtonFactory buttonFactory;
+    private final Stage stage;
+    private final FitViewport viewport;
+    private final SpriteBatch batch;
+    private final Texture backgroundTexture;
+    private final Texture leafTexture;
 
-    public ProfileScreen(Settings game) {
-        soundManager = game.getSoundManager();
-        buttonFactory = new ButtonFactory();
+    public ProfileScreen() {
+
+        ButtonFactory buttonFactory = new ButtonFactory();
 
         viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
 
         Gdx.input.setInputProcessor(stage);
 
-        fadeActor = new Actor();
+        Actor fadeActor = new Actor();
         fadeActor.setColor(1f, 1f, 1f, 0f);
         fadeActor.setSize(1920, 1080);
 
@@ -55,20 +45,20 @@ public class ProfileScreen extends ScreenAdapter {
         backgroundTexture = new Texture(Gdx.files.internal("background.png"));
         leafTexture = new Texture(Gdx.files.internal("leaf.png"));
 
-        fallingLeaves = new ArrayList<>();
+        ArrayList<FallingLeaf> fallingLeaves = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             FallingLeaf leaf = new FallingLeaf(leafTexture, viewport.getWorldWidth());
             fallingLeaves.add(leaf);
             stage.addActor(leaf);
         }
-        returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
-            - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
+        Container<ImageButton> returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+                - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
 
-        knightButtonContainer = buttonFactory.createButton("knight.png",500,600,500, viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
+        Container<ImageButton> knightButtonContainer = buttonFactory.createButton("knight.png", 500, 600, 500, viewport.getWorldHeight() - 550, MainMenuScreen.class, stage);
 
-        necromantButtonContainer = buttonFactory.createButton("necromant.png",500,600,1000,viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
+        Container<ImageButton> necromantButtonContainer = buttonFactory.createButton("necromant.png", 500, 600, 1000, viewport.getWorldHeight() - 550, MainMenuScreen.class, stage);
 
-        assassinButtonContainer=buttonFactory.createButton("shadow.png",500,600,1500,viewport.getWorldHeight()-550, MainMenuScreen.class,stage);
+        Container<ImageButton> assassinButtonContainer = buttonFactory.createButton("shadow.png", 500, 600, 1500, viewport.getWorldHeight() - 550, MainMenuScreen.class, stage);
 
         addHoverEffect(knightButtonContainer);
         addHoverEffect(necromantButtonContainer);

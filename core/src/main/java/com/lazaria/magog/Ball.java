@@ -42,16 +42,12 @@ public class Ball {
         y += speedY * delta;
 
         if (collidesWith(paddle)) {
-            float hitPosition = (x - (paddle.getX() + paddle.getWidth() / 2)) / (paddle.getWidth() / 2);
-            speedY = Math.abs(speedY);
-            speedX = hitPosition * speed;
-
+            bounceOffPaddle(paddle);
             if (knightMoving()) {
-                character.setAttacking(true);
-            } else {
                 character.setAttacking(true);
             }
         }
+
         if (x < 0 || x > 1920 - radius * 2) {
             speedX = -speedX;
         }
@@ -64,15 +60,24 @@ public class Ball {
         }
     }
 
+    public void bounce() {
+        speedY = -speedY;
+    }
+
+    private void bounceOffPaddle(Paddle paddle) {
+        float hitPosition = (x - (paddle.getX() + paddle.getWidth() / 2)) / (paddle.getWidth() / 2);
+        speedY = Math.abs(speedY);
+        speedX = hitPosition * speed;
+    }
+
     private boolean knightMoving() {
         return Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)
             || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D);
     }
 
     private void resetBall() {
-        x = 960;
         y = 1000;
-        speedX = speed;
+        speedX = 0;
         speedY = -speed;
     }
 
@@ -95,6 +100,18 @@ public class Ball {
             radius * 2 * textureScale, radius * 2 * textureScale,
             1, 1,
             rotationAngle);
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 
     public void dispose() {

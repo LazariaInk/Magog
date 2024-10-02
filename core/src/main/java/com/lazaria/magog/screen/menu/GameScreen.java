@@ -5,9 +5,11 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.lazaria.magog.*;
 import com.lazaria.magog.Character;
@@ -25,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
     private SoundManager soundManager;
     private Container<ImageButton> returnContainer;
     private ButtonFactory buttonFactory;
+    private Array<Crystal> crystals;
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
@@ -34,13 +37,22 @@ public class GameScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("firstMap.png"));
 
+        crystals = new Array<>();
+
+        for (int i = 0; i < 20; i++) {
+            float x = MathUtils.random(100, 1800);
+            float y = MathUtils.random(500, 1000);
+            int type = MathUtils.random(1, 10);
+            crystals.add(new Crystal(x, y, type));
+        }
+
         character = Settings.getInstance().getSelectedCharacter();
         returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         paddle = new Paddle(200, 20);
         Knight knight = (Knight) character;
         knight.setPaddle(paddle);
-        ball = new Ball(560, 1000f, 1000f);
+        ball = new Ball(560, 1000f, 700f);
 
         soundManager = Settings.getInstance().getSoundManager();
         stage.addActor(returnContainer);
@@ -55,11 +67,25 @@ public class GameScreen extends ScreenAdapter {
         ball.update(delta, character, paddle);
         paddle.update(character.getX(), character.getY(), character.getWidth(), character.getHeight());
 
+        for (Crystal crystal : crystals) {
+            crystal.update(delta);
+
+            if (!crystal.isDestroyed() && crystal.collidesWith(ball)) {
+                ball.bounce();
+                crystal.hit();
+            }
+        }
+
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         character.render(batch);
         paddle.render(batch);
         ball.render(batch);
+
+        for (Crystal crystal : crystals) {
+            crystal.render(batch);
+        }
+
         batch.end();
 
         stage.act(delta);
@@ -79,5 +105,9 @@ public class GameScreen extends ScreenAdapter {
         ball.dispose();
         paddle.dispose();
         stage.dispose();
+
+        for (Crystal crystal : crystals) {
+            crystal.dispose();
+        }
     }
 }

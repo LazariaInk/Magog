@@ -17,6 +17,7 @@ import com.lazaria.magog.audio.SoundManager;
 import com.lazaria.magog.utils.ButtonFactory;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class SettingsScreen extends ScreenAdapter {
     private Stage stage;
@@ -31,8 +32,8 @@ public class SettingsScreen extends ScreenAdapter {
     private SoundManager soundManager;
     private ButtonFactory buttonFactory;
 
-    public SettingsScreen(Settings game) {
-        soundManager = game.getSoundManager();
+    public SettingsScreen() {
+        soundManager = Settings.getInstance().getSoundManager();
         buttonFactory = new ButtonFactory();
 
         viewport = new FitViewport(1920, 1080);
