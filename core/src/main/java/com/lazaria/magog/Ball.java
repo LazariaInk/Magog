@@ -17,20 +17,23 @@ public class Ball {
 
     private Animation<TextureRegion> ballAnimation;
 
+    private float textureScale = 5.0f;
+
     public Ball(float x, float y, float speed) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.radius = 20f;
+
         this.speedX = speed;
         this.speedY = -speed;
 
         Array<TextureRegion> frames = new Array<>();
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 30; i++) {
             Texture ballTexture = new Texture(Gdx.files.internal("ball" + i + ".png"));
             frames.add(new TextureRegion(ballTexture));
         }
-        ballAnimation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+        ballAnimation = new Animation<>(0.05f, frames, Animation.PlayMode.LOOP);
     }
 
     public void update(float delta, Character character, Paddle paddle) {
@@ -87,9 +90,9 @@ public class Ball {
         float rotationAngle = calculateRotationAngle();
 
         batch.draw(currentFrame,
-            x - radius, y - radius,
-            radius, radius,
-            radius * 2, radius * 2,
+            x - radius * textureScale, y - radius * textureScale,
+            radius * textureScale, radius * textureScale,
+            radius * 2 * textureScale, radius * 2 * textureScale,
             1, 1,
             rotationAngle);
     }
