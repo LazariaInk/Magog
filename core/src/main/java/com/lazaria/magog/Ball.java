@@ -1,7 +1,6 @@
 package com.lazaria.magog;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,10 +23,8 @@ public class Ball {
         this.y = y;
         this.speed = speed;
         this.radius = 20f;
-
         this.speedX = speed;
         this.speedY = -speed;
-
         Array<TextureRegion> frames = new Array<>();
         for (int i = 1; i <= 30; i++) {
             Texture ballTexture = new Texture(Gdx.files.internal("ball" + i + ".png"));
@@ -40,14 +37,10 @@ public class Ball {
         elapsedTime += delta;
         x += speedX * delta;
         y += speedY * delta;
-
         if (collidesWith(paddle)) {
             bounceOffPaddle(paddle);
-            if (knightMoving()) {
-                character.setAttacking(true);
-            }
+            character.setAttacking(true);
         }
-
         if (x < 0 || x > 1920 - radius * 2) {
             speedX = -speedX;
         }
@@ -68,11 +61,6 @@ public class Ball {
         float hitPosition = (x - (paddle.getX() + paddle.getWidth() / 2)) / (paddle.getWidth() / 2);
         speedY = Math.abs(speedY);
         speedX = hitPosition * speed;
-    }
-
-    private boolean knightMoving() {
-        return Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)
-            || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D);
     }
 
     private void resetBall() {
