@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,6 +32,11 @@ public class GameScreen extends ScreenAdapter {
     private Array<Crystal> crystals;
     private Array<Texture> hearts;
     private GameState gameState;
+    private BitmapFont font;
+    private int score = 0;
+
+    private float respawnTimer;
+    private float respawnInterval = 2.0f;
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
@@ -39,35 +45,26 @@ public class GameScreen extends ScreenAdapter {
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/firstMap.png"));
-
         gameState = new GameState(5);
-
         hearts = new Array<>();
         for (int i = 0; i < gameState.getLives(); i++) {
             hearts.add(new Texture(Gdx.files.internal("graphic/util/heart.png")));
         }
-
         crystals = new Array<>();
-        for (int i = 0; i < 20; i++) {
-            float x = MathUtils.random(100, 1800);
-            float y = MathUtils.random(500, 1000);
-            int type = MathUtils.random(1, 10);
-            crystals.add(new Crystal(x, y, type));
-        }
-
+        spawnCrystals(20);
         character = Settings.getInstance().getSelectedCharacter();
         returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100,
             viewport.getWorldWidth() - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
-
         paddle = new Paddle(200, 20);
         Knight knight = (Knight) character;
         knight.setPaddle(paddle);
         ball = new Ball(560, 1000f, 700f);
-
         soundManager = Settings.getInstance().getSoundManager();
         stage.addActor(returnContainer);
-
         soundManager.playGameMusic();
+        font = new BitmapFont();
+        font.getData().setScale(3);
+        respawnTimer = 0f;
     }
 
     @Override
@@ -83,7 +80,13 @@ public class GameScreen extends ScreenAdapter {
                 if (!crystal.isDestroyed() && crystal.collidesWith(ball)) {
                     ball.bounce();
                     crystal.hit();
+                    score++;
                 }
+            }
+            respawnTimer += delta;
+            if (respawnTimer >= respawnInterval) {
+                respawnCrystals();
+                respawnTimer = 0f;
             }
         }
         batch.begin();
@@ -91,6 +94,7 @@ public class GameScreen extends ScreenAdapter {
         character.render(batch);
         paddle.render(batch);
         ball.render(batch);
+        font.draw(batch, "Score: " + score, 10, viewport.getWorldHeight() - 10);
         for (int i = 0; i < gameState.getLives(); i++) {
             batch.draw(hearts.get(i), 10 + i * 50, 10, 100, 100);
         }
@@ -105,7 +109,6 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-
     private void showGameOverScreen() {
         if (gameOverContainer == null) {
             gameOverContainer = buttonFactory.createButton("graphic/button/game-over.png", 800, 800,
@@ -114,11 +117,24 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void spawnCrystals(int count) {
+        for (int i = 0; i < count; i++) {
+            float x = MathUtils.random(100, 1800);
+            float y = MathUtils.random(500, 1000);
+            int type = MathUtils.random(1, 10);
+            crystals.add(new Crystal(x, y, type));
+        }
+    }
+
+    private void respawnCrystals() {
+        int crystalsToSpawn = MathUtils.random(3, 6);
+        spawnCrystals(crystalsToSpawn);
+    }
+
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
     }
-
     @Override
     public void dispose() {
         batch.dispose();
@@ -127,13 +143,12 @@ public class GameScreen extends ScreenAdapter {
         ball.dispose();
         paddle.dispose();
         stage.dispose();
-
         for (Crystal crystal : crystals) {
             crystal.dispose();
         }
-
         for (Texture heart : hearts) {
             heart.dispose();
         }
+        font.dispose();
     }
 }
