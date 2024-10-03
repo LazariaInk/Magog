@@ -26,8 +26,11 @@ public class GameScreen extends ScreenAdapter {
     private Ball ball;
     private SoundManager soundManager;
     private Container<ImageButton> returnContainer;
+    private Container<ImageButton> gameOverContainer;
     private ButtonFactory buttonFactory;
     private Array<Crystal> crystals;
+    private Array<Texture> hearts;
+    private GameState gameState;
 
     public GameScreen() {
         viewport = new FitViewport(1920, 1080);
@@ -37,8 +40,14 @@ public class GameScreen extends ScreenAdapter {
         batch = new SpriteBatch();
         backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/firstMap.png"));
 
-        crystals = new Array<>();
+        gameState = new GameState(5);
 
+        hearts = new Array<>();
+        for (int i = 0; i < gameState.getLives(); i++) {
+            hearts.add(new Texture(Gdx.files.internal("graphic/util/heart.png")));
+        }
+
+        crystals = new Array<>();
         for (int i = 0; i < 20; i++) {
             float x = MathUtils.random(100, 1800);
             float y = MathUtils.random(500, 1000);
@@ -47,8 +56,9 @@ public class GameScreen extends ScreenAdapter {
         }
 
         character = Settings.getInstance().getSelectedCharacter();
-        returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100, viewport.getWorldWidth()
-            - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
+        returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100,
+            viewport.getWorldWidth() - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
+
         paddle = new Paddle(200, 20);
         Knight knight = (Knight) character;
         knight.setPaddle(paddle);
@@ -56,6 +66,7 @@ public class GameScreen extends ScreenAdapter {
 
         soundManager = Settings.getInstance().getSoundManager();
         stage.addActor(returnContainer);
+
         soundManager.playGameMusic();
     }
 
@@ -63,33 +74,44 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(viewport.getCamera().combined);
-        character.update(delta);
-        ball.update(delta, character, paddle);
-        paddle.update(character.getX(), character.getY(), character.getWidth(), character.getHeight());
-
-        for (Crystal crystal : crystals) {
-            crystal.update(delta);
-
-            if (!crystal.isDestroyed() && crystal.collidesWith(ball)) {
-                ball.bounce();
-                crystal.hit();
+        if (!gameState.isGameOver()) {
+            character.update(delta);
+            ball.update(delta, character, paddle, gameState);
+            paddle.update(character.getX(), character.getY(), character.getWidth(), character.getHeight());
+            for (Crystal crystal : crystals) {
+                crystal.update(delta);
+                if (!crystal.isDestroyed() && crystal.collidesWith(ball)) {
+                    ball.bounce();
+                    crystal.hit();
+                }
             }
         }
-
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
         character.render(batch);
         paddle.render(batch);
         ball.render(batch);
-
+        for (int i = 0; i < gameState.getLives(); i++) {
+            batch.draw(hearts.get(i), 10 + i * 50, 10, 100, 100);
+        }
         for (Crystal crystal : crystals) {
             crystal.render(batch);
         }
-
         batch.end();
-
         stage.act(delta);
         stage.draw();
+        if (gameState.isGameOver()) {
+            showGameOverScreen();
+        }
+    }
+
+
+    private void showGameOverScreen() {
+        if (gameOverContainer == null) {
+            gameOverContainer = buttonFactory.createButton("graphic/button/game-over.png", 800, 800,
+                viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2 - 100, MainMenuScreen.class, stage);
+            stage.addActor(gameOverContainer);
+        }
     }
 
     @Override
@@ -108,6 +130,10 @@ public class GameScreen extends ScreenAdapter {
 
         for (Crystal crystal : crystals) {
             crystal.dispose();
+        }
+
+        for (Texture heart : hearts) {
+            heart.dispose();
         }
     }
 }

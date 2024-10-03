@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import javax.swing.*;
 
 public abstract class Character {
     protected Texture idleTexture, runTexture, runAttackTexture, attackTexture;
@@ -18,6 +21,8 @@ public abstract class Character {
     protected final float attackDuration = 0.4f;
     protected Sound runSound, attackSound;
     private long runSoundId = -1, attackSoundId = -1;
+    private FitViewport viewport;
+
 
     protected Character(Texture idleTexture, Texture runTexture, Texture runAttackTexture, Texture attackTexture,
                         Sound runSound, Sound attackSound, float x, float y, float speed) {
@@ -29,7 +34,7 @@ public abstract class Character {
         this.runTexture = runTexture;
         this.runAnimation = createAnimation(runTexture, 7, 0.1f);
         this.runAttackTexture = runAttackTexture;
-
+        viewport = new FitViewport(1920, 1080);
         this.attackTexture = attackTexture;
         this.runAttackAnimation = createAnimation(attackTexture, 4, 0.05f);
         this.attackAnimation = createAnimation(attackTexture, 4, 0.2f);
@@ -81,17 +86,26 @@ public abstract class Character {
             performSkill();
         }
 
+        // Calculate potential new position
+        float newX = x;
+
         if (movingRight) {
-            x += speed * delta;
+            newX += speed * delta;
             facingRight = true;
             playRunSound();
         } else if (movingLeft) {
-            x -= speed * delta;
+            newX -= speed * delta;
             facingRight = false;
             playRunSound();
         } else {
             stopRunSound();
         }
+        if (newX < 0) {
+            newX = 0;
+        } else if (newX > viewport.getWorldWidth() - getWidth()) {
+            newX = viewport.getWorldWidth() - getWidth();
+        }
+        x = newX;
 
         if (attacking) {
             attackTime += delta;
@@ -102,6 +116,8 @@ public abstract class Character {
             }
         }
     }
+
+
 
     public abstract void performSkill();
 

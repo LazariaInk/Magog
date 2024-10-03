@@ -14,7 +14,7 @@ public class Crystal {
     private final Animation<TextureRegion> crystalAnimation;
     private float elapsedTime;
     private boolean destroyed;
-    private static final int MAX_HITS = 5;
+    private static final int MAX_HITS = 1;
     private final float radius = 80f;
 
     private final Sound crystalHitSound;

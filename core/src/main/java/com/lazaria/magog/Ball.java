@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.lazaria.magog.screen.menu.GameScreen;
 
 public class Ball {
     private float x, y;
@@ -33,7 +34,7 @@ public class Ball {
         ballAnimation = new Animation<>(0.05f, frames, Animation.PlayMode.LOOP);
     }
 
-    public void update(float delta, Character character, Paddle paddle) {
+    public void update(float delta, Character character, Paddle paddle, GameState gameState) {
         elapsedTime += delta;
         x += speedX * delta;
         y += speedY * delta;
@@ -50,6 +51,7 @@ public class Ball {
         if (y < 0) {
             resetBall();
             character.setAttacking(false);
+            gameState.loseLife();
         }
     }
 
