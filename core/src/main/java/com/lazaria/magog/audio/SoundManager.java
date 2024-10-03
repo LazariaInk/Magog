@@ -14,9 +14,9 @@ public class SoundManager {
     private float soundEffectsVolume = 1.0f;
 
     private SoundManager() {
-        this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menu-music.mp3"));
-        this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("battle.mp3"));
-        this.buttonSound = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
+        this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/menu-music.mp3"));
+        this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/battle.mp3"));
+        this.buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/button.mp3"));
         menuMusic.setLooping(true);
         gameMusic.setLooping(true);
     }

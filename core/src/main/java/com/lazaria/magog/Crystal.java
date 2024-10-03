@@ -25,7 +25,7 @@ public class Crystal {
         this.hits = 0;
         this.destroyed = false;
 
-        String filePath = "crystal" + type + ".png";
+        String filePath = "graphic/crystal/crystal" + type + ".png";
         Texture texture = new Texture(Gdx.files.internal(filePath));
 
         TextureRegion[][] tempFrames = TextureRegion.split(texture, texture.getWidth() / 24, texture.getHeight());
@@ -36,7 +36,7 @@ public class Crystal {
         }
 
         crystalAnimation = new Animation<>(0.05f, frames, Animation.PlayMode.LOOP);
-        crystalHitSound = Gdx.audio.newSound(Gdx.files.internal("crystal.wav"));
+        crystalHitSound = Gdx.audio.newSound(Gdx.files.internal("sound/crystal.wav"));
     }
 
     public void update(float delta) {

@@ -27,7 +27,7 @@ public class Ball {
         this.speedY = -speed;
         Array<TextureRegion> frames = new Array<>();
         for (int i = 1; i <= 30; i++) {
-            Texture ballTexture = new Texture(Gdx.files.internal("ball" + i + ".png"));
+            Texture ballTexture = new Texture(Gdx.files.internal("graphic/ball/ball" + i + ".png"));
             frames.add(new TextureRegion(ballTexture));
         }
         ballAnimation = new Animation<>(0.05f, frames, Animation.PlayMode.LOOP);

@@ -11,7 +11,7 @@ public class Paddle {
     public Paddle(float width, float height) {
         this.width = width;
         this.height = height;
-        this.texture = new Texture("paddle.png");
+        this.texture = new Texture("graphic/util/paddle.png");
     }
 
     public void update(float knightX, float knightY, float knightWidth, float knightHeight) {

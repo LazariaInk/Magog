@@ -35,7 +35,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("firstMap.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/firstMap.png"));
 
         crystals = new Array<>();
 
@@ -47,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         character = Settings.getInstance().getSelectedCharacter();
-        returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+        returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         paddle = new Paddle(200, 20);
         Knight knight = (Knight) character;

@@ -21,21 +21,21 @@ public class Knight extends Character {
 
     public Knight(float x, float y, float speed, Paddle paddle) {
         super(
-            new Texture(Gdx.files.internal("knight_idle.png")),
-            new Texture(Gdx.files.internal("knight_run.png")),
-            new Texture(Gdx.files.internal("knight_runattack.png")),
-            new Texture(Gdx.files.internal("knight_attack.png")),
-            Gdx.audio.newSound(Gdx.files.internal("knight_run.wav")),
-            Gdx.audio.newSound(Gdx.files.internal("knight_attack.mp3")),
+            new Texture(Gdx.files.internal("graphic/knight/knight_idle.png")),
+            new Texture(Gdx.files.internal("graphic/knight/knight_run.png")),
+            new Texture(Gdx.files.internal("graphic/knight/knight_runattack.png")),
+            new Texture(Gdx.files.internal("graphic/knight/knight_attack.png")),
+            Gdx.audio.newSound(Gdx.files.internal("sound/knight_run.wav")),
+            Gdx.audio.newSound(Gdx.files.internal("sound/knight_attack.mp3")),
             x, y, speed
         );
         this.paddle = paddle;
 
-        this.defendTextureIdle = new Texture(Gdx.files.internal("defend.png"));
-        this.defendAnimationIdle = createAnimation(defendTextureIdle, 5, 0.2f); // 5 frames for idle defense
+        this.defendTextureIdle = new Texture(Gdx.files.internal("graphic/knight/defend.png"));
+        this.defendAnimationIdle = createAnimation(defendTextureIdle, 5, 0.2f);
 
-        this.defendTextureMoving = new Texture(Gdx.files.internal("knight_skill.png"));
-        this.defendAnimationMoving = createAnimation(defendTextureMoving, 7, 0.1f); // 7 frames for moving defense
+        this.defendTextureMoving = new Texture(Gdx.files.internal("graphic/knight/knight_skill.png"));
+        this.defendAnimationMoving = createAnimation(defendTextureMoving, 7, 0.1f);
     }
 
     public void setPaddle(Paddle paddle) {

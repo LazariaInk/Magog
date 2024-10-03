@@ -30,8 +30,8 @@ public class MainMenuScreen extends ScreenAdapter {
         buttonFactory = new ButtonFactory();
         batch = new SpriteBatch();
         viewport = new FitViewport(1920, 1080);
-        backgroundTexture = new Texture(Gdx.files.internal("background.png"));
-        leafTexture = new Texture(Gdx.files.internal("leaf.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/background.png"));
+        leafTexture = new Texture(Gdx.files.internal("graphic/util/leaf.png"));
         Settings.getInstance().getSoundManager().playMenuMusic();
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
@@ -50,13 +50,13 @@ public class MainMenuScreen extends ScreenAdapter {
     }
 
     private void initButtons() {
-        playContainer = buttonFactory.createButton("Start.png", 400f, 200f, viewport.getWorldWidth() - 400f, 200,
+        playContainer = buttonFactory.createButton("graphic/button/Start.png", 400f, 200f, viewport.getWorldWidth() - 400f, 200,
             GameScreen.class, stage
         );
-        settingsContainer = buttonFactory.createButton("settings.png", 200f, 100f, viewport.getWorldWidth() - 200f - 20,
+        settingsContainer = buttonFactory.createButton("graphic/button/settings.png", 200f, 100f, viewport.getWorldWidth() - 200f - 20,
             viewport.getWorldHeight() - 100f - 20, SettingsScreen.class, stage);
 
-        profileContainer = buttonFactory.createButton("profile.png", 400f, 200f, 300, 200,
+        profileContainer = buttonFactory.createButton("graphic/button/profile.png", 400f, 200f, 300, 200,
             ProfileScreen.class, stage);
     }
 

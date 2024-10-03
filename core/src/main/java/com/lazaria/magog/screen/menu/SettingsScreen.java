@@ -51,8 +51,8 @@ public class SettingsScreen extends ScreenAdapter {
 
         batch = new SpriteBatch();
 
-        backgroundTexture = new Texture(Gdx.files.internal("background.png"));
-        leafTexture = new Texture(Gdx.files.internal("leaf.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/background.png"));
+        leafTexture = new Texture(Gdx.files.internal("graphic/util/leaf.png"));
 
         fallingLeaves = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -65,7 +65,7 @@ public class SettingsScreen extends ScreenAdapter {
         table.setFillParent(true);
         table.center();
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) (100 * Gdx.graphics.getDensity());
         BitmapFont font = generator.generateFont(parameter);
@@ -100,7 +100,7 @@ public class SettingsScreen extends ScreenAdapter {
                 soundManager.playSoundEffect();
             }
         });
-        returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+        returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100, viewport.getWorldWidth()
             - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
         table.add(musicLabel).pad(20);
         table.row();

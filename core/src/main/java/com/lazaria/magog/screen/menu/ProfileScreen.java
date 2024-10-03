@@ -42,8 +42,8 @@ public class ProfileScreen extends ScreenAdapter {
 
         batch = new SpriteBatch();
 
-        backgroundTexture = new Texture(Gdx.files.internal("background.png"));
-        leafTexture = new Texture(Gdx.files.internal("leaf.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/background.png"));
+        leafTexture = new Texture(Gdx.files.internal("graphic/util/leaf.png"));
 
         ArrayList<FallingLeaf> fallingLeaves = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -51,7 +51,7 @@ public class ProfileScreen extends ScreenAdapter {
             fallingLeaves.add(leaf);
             stage.addActor(leaf);
         }
-        Container<ImageButton> returnContainer = buttonFactory.createButton("return.png", 200, 100, viewport.getWorldWidth()
+        Container<ImageButton> returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100, viewport.getWorldWidth()
                 - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
 
         Container<ImageButton> knightButtonContainer = buttonFactory.createButton("knight.png", 500, 600, 500, viewport.getWorldHeight() - 550, MainMenuScreen.class, stage);
@@ -65,7 +65,7 @@ public class ProfileScreen extends ScreenAdapter {
         addHoverEffect(assassinButtonContainer);
 
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) (100 * Gdx.graphics.getDensity());
         BitmapFont font = generator.generateFont(parameter);
