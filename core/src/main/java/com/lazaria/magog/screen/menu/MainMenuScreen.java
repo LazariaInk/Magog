@@ -23,7 +23,6 @@ public class MainMenuScreen extends ScreenAdapter {
     private Container<ImageButton> playContainer;
     private Container<ImageButton> settingsContainer;
     private Container<ImageButton> profileContainer;
-    private ArrayList<FallingLeaf> fallingLeaves;
     private ButtonFactory buttonFactory;
 
     public MainMenuScreen() {
@@ -40,13 +39,6 @@ public class MainMenuScreen extends ScreenAdapter {
         stage.addActor(playContainer);
         stage.addActor(settingsContainer);
         stage.addActor(profileContainer);
-
-        fallingLeaves = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            FallingLeaf leaf = new FallingLeaf(leafTexture, viewport.getWorldWidth());
-            fallingLeaves.add(leaf);
-            stage.addActor(leaf);
-        }
     }
 
     private void initButtons() {

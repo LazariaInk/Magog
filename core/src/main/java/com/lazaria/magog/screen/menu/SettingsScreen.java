@@ -26,7 +26,6 @@ public class SettingsScreen extends ScreenAdapter {
     private SpriteBatch batch;
     private Texture backgroundTexture;
     private Texture leafTexture;
-    private ArrayList<FallingLeaf> fallingLeaves;
     private Container<ImageButton> returnContainer;
     private Actor fadeActor;
     private SoundManager soundManager;
@@ -53,13 +52,6 @@ public class SettingsScreen extends ScreenAdapter {
 
         backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/background.png"));
         leafTexture = new Texture(Gdx.files.internal("graphic/util/leaf.png"));
-
-        fallingLeaves = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            FallingLeaf leaf = new FallingLeaf(leafTexture, viewport.getWorldWidth());
-            fallingLeaves.add(leaf);
-            stage.addActor(leaf);
-        }
 
         Table table = new Table();
         table.setFillParent(true);

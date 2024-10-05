@@ -45,12 +45,6 @@ public class ProfileScreen extends ScreenAdapter {
         backgroundTexture = new Texture(Gdx.files.internal("graphic/scene/background.png"));
         leafTexture = new Texture(Gdx.files.internal("graphic/util/leaf.png"));
 
-        ArrayList<FallingLeaf> fallingLeaves = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            FallingLeaf leaf = new FallingLeaf(leafTexture, viewport.getWorldWidth());
-            fallingLeaves.add(leaf);
-            stage.addActor(leaf);
-        }
         Container<ImageButton> returnContainer = buttonFactory.createButton("graphic/button/return.png", 200, 100, viewport.getWorldWidth()
                 - 200 - 20, viewport.getWorldHeight() - 100 - 20, MainMenuScreen.class, stage);
 
